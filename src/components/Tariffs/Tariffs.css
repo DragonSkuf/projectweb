@@ -1,0 +1,196 @@
+.tariffs {
+  padding: 10rem 0;
+  background: var(--color-bg);
+}
+
+.tariffs__head {
+  text-align: center;
+  max-width: 60rem;
+  margin: 0 auto 6rem;
+}
+
+.tariffs__title {
+  font-size: 3.6rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 1.6rem;
+  letter-spacing: -0.05rem;
+}
+
+.tariffs__subtitle {
+  font-size: 1.6rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.tariffs__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.4rem;
+  align-items: start;
+}
+
+/* Card */
+.tariffs__card {
+  background: var(--color-bg-card);
+  border: 0.1rem solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 3.2rem 2.8rem;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tariffs__card--popular {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.1rem var(--color-accent), var(--shadow-card);
+}
+
+.tariffs__popular-badge {
+  position: absolute;
+  top: -1.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gradient-btn);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.4rem 1.6rem;
+  border-radius: 2rem;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.tariffs__plan-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.tariffs__plan-desc {
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2.4rem;
+}
+
+/* Price */
+.tariffs__price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 3.2rem;
+}
+
+.tariffs__currency {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.tariffs__price {
+  font-size: 4.8rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.tariffs__card--popular .tariffs__price,
+.tariffs__card--popular .tariffs__currency {
+  color: var(--color-accent);
+}
+
+.tariffs__period {
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
+}
+
+/* Features list */
+.tariffs__features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 3.2rem;
+}
+
+.tariffs__feature {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
+}
+
+.tariffs__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: var(--color-accent-dim);
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.tariffs__check svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Button */
+.tariffs__btn {
+  width: 100%;
+  padding: 1.3rem;
+  border-radius: var(--radius-md);
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.tariffs__btn--primary {
+  background: var(--gradient-btn);
+  color: #fff;
+  border: none;
+}
+
+.tariffs__btn--primary:hover {
+  opacity: 0.88;
+  transform: translateY(-0.1rem);
+}
+
+.tariffs__btn--ghost {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 0.1rem solid var(--color-border);
+}
+
+.tariffs__btn--ghost:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-dim);
+  color: var(--color-accent);
+}
+
+/* Responsive */
+@media (max-width: 96rem) {
+  .tariffs__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 64rem) {
+  .tariffs {
+    padding: 7rem 0;
+  }
+
+  .tariffs__title {
+    font-size: 2.8rem;
+  }
+
+  .tariffs__grid {
+    grid-template-columns: 1fr;
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+}
