@@ -17,7 +17,7 @@ export default function VpnWidget() {
       <div className="vpn-widget__identity">
         <div className="vpn-widget__avatar">U</div>
         <div className="vpn-widget__identity-info">
-          <span className="vpn-widget__identity-name">SecureVPN</span>
+          <span className="vpn-widget__identity-name">SecureNet</span>
           <span className="vpn-widget__identity-status">{t('widget.protected')}</span>
         </div>
         <div className="vpn-widget__dot" />

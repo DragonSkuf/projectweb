@@ -1,6 +1,7 @@
 .faq {
-  padding: 10rem 0;
-  background: var(--color-bg-secondary);
+  padding: 10rem 0 0;
+  margin-bottom: -14rem;
+  background: var(--color-bg);
 }
 
 .faq__head {

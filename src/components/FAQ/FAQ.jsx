@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLanguage } from '../../context/LanguageContext.jsx'
 import './FAQ.css'
 
@@ -7,6 +7,26 @@ const questions = ['q1', 'q2', 'q3', 'q4', 'q5']
 export default function FAQ() {
   const { t } = useLanguage()
   const [open, setOpen] = useState(null)
+  const [minHeight, setMinHeight] = useState(null)
+  const listRef = useRef(null)
+  const answerRefs = useRef([])
+
+  useEffect(() => {
+    if (!listRef.current) return
+    const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize)
+    const cssMaxHeight = 30 * rootFontSize
+    const collapsed = listRef.current.getBoundingClientRect().height
+    setMinHeight(collapsed + cssMaxHeight)
+
+    const onResize = () => {
+      if (!listRef.current) return
+      const fs = parseFloat(getComputedStyle(document.documentElement).fontSize)
+      const h = listRef.current.getBoundingClientRect().height
+      setMinHeight(h + 30 * fs)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const toggle = (i) => setOpen(open === i ? null : i)
 
@@ -18,7 +38,11 @@ export default function FAQ() {
           <p className="faq__subtitle">{t('faq.subtitle')}</p>
         </div>
 
-        <div className="faq__list">
+        <div
+          className="faq__list"
+          ref={listRef}
+          style={minHeight ? { minHeight: `${minHeight}px` } : undefined}
+        >
           {questions.map((q, i) => (
             <div
               key={q}
@@ -32,7 +56,7 @@ export default function FAQ() {
                   </svg>
                 </span>
               </button>
-              <div className="faq__answer">
+              <div className="faq__answer" ref={el => answerRefs.current[i] = el}>
                 <p>{t(`faq.${q.replace('q', 'a')}`)}</p>
               </div>
             </div>

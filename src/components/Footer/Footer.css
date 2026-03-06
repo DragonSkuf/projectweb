@@ -73,6 +73,108 @@
   color: var(--color-accent);
 }
 
+.footer__blog-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s;
+}
+
+.footer__blog-btn:hover {
+  color: var(--color-accent);
+}
+
+/* Blog popup */
+.footer__blog-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.footer__blog-popup {
+  background: var(--color-bg-card);
+  border: 0.1rem solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 3.2rem;
+  width: 36rem;
+  max-width: calc(100vw - 3.2rem);
+  position: relative;
+}
+
+.footer__blog-close {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.footer__blog-close:hover { color: var(--color-text-primary); }
+
+.footer__blog-close svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.footer__blog-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 2.4rem;
+}
+
+.footer__blog-socials {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.footer__social {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 1.4rem 1.8rem;
+  border-radius: var(--radius-md);
+  border: 0.1rem solid var(--color-border);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.footer__social svg {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+}
+
+.footer__social--vk { color: var(--color-text-primary); }
+.footer__social--vk svg { color: #4a76a8; }
+.footer__social--vk:hover { border-color: #4a76a8; background: rgba(74,118,168,0.08); }
+
+.footer__social--tg svg { color: #26a5e4; }
+.footer__social--tg:hover { border-color: #26a5e4; background: rgba(38,165,228,0.08); }
+
+.footer__social--yt svg { color: #ff0000; }
+.footer__social--yt:hover { border-color: #ff0000; background: rgba(255,0,0,0.08); }
+
+.footer__social--phone svg { color: var(--color-accent); }
+.footer__social--phone:hover { border-color: var(--color-accent); background: var(--color-accent-dim); }
+
 /* Bottom */
 .footer__bottom {
   display: flex;

@@ -18,6 +18,8 @@ export default function Dashboard() {
   const { t } = useLanguage()
   const navigate = useNavigate()
 
+  const tGeo = (name) => t(`geo.${name}`) !== `geo.${name}` ? t(`geo.${name}`) : name
+
   const [tab, setTab] = useState('profile')
   const [editMode, setEditMode] = useState(false)
   const [editForm, setEditForm] = useState({ login: '', email: '' })
@@ -28,8 +30,10 @@ export default function Dashboard() {
 
   const [subscription, setSubscription] = useState(null)
   const [connections, setConnections] = useState([])
+  const [servers, setServers] = useState([])
   const [loadingSub, setLoadingSub] = useState(false)
   const [loadingConn, setLoadingConn] = useState(false)
+  const [loadingServers, setLoadingServers] = useState(false)
 
   const accessKey = generateAccessKey(user?.id)
 
@@ -39,7 +43,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (tab === 'subscription') fetchSubscription()
-    if (tab === 'connections') fetchConnections()
+    if (tab === 'connections') { fetchConnections(); fetchServers() }
   }, [tab])
 
   async function fetchSubscription() {
@@ -65,6 +69,16 @@ export default function Dashboard() {
       .limit(20)
     setConnections(data || [])
     setLoadingConn(false)
+  }
+
+  async function fetchServers() {
+    setLoadingServers(true)
+    const { data } = await supabase
+      .from('servers')
+      .select('id, country, city, load, is_active')
+      .order('country', { ascending: true })
+    setServers(data || [])
+    setLoadingServers(false)
   }
 
   const handleEditChange = (e) => setEditForm(f => ({ ...f, [e.target.name]: e.target.value }))
@@ -227,15 +241,23 @@ export default function Dashboard() {
                   <div className="dashboard-sub-card">
                     <div className="dashboard-sub-header">
                       <div>
-                        <div className="dashboard-sub-plan">{subscription.tariffs?.name}</div>
+                        <div className="dashboard-sub-plan">
+                          {(() => {
+                            const key = subscription.tariffs?.name?.toLowerCase()
+                            const translated = t(`tariffs.${key}_name`)
+                            return translated !== `tariffs.${key}_name` ? translated : subscription.tariffs?.name
+                          })()}
+                        </div>
                         <div className="dashboard-sub-price">
                           {subscription.tariffs?.price > 0
-                            ? `${subscription.tariffs.price} ₽ / мес`
+                            ? `${subscription.tariffs.price} ${t('dashboard.sub_price_format')}`
                             : t('dashboard.sub_free')}
                         </div>
                       </div>
                       <span className={`dashboard-sub-status dashboard-sub-status--${subscription.status}`}>
-                        {subscription.status}
+                        {t(`dashboard.sub_status_${subscription.status}`) !== `dashboard.sub_status_${subscription.status}`
+                          ? t(`dashboard.sub_status_${subscription.status}`)
+                          : subscription.status}
                       </span>
                     </div>
 
@@ -278,14 +300,14 @@ export default function Dashboard() {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                           <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                         </svg>
-                        <span>Data: <strong>{subscription.tariffs?.data_count || '—'}</strong></span>
+                        <span>{t('dashboard.sub_data')}: <strong>{subscription.tariffs?.data_count || '—'}</strong></span>
                       </div>
                     </div>
 
                     <div className="dashboard-sub-dates">
                       <div className="dashboard-info-row">
                         <span className="dashboard-info-label">{t('dashboard.sub_renew')}</span>
-                        <span className="dashboard-info-value">{subscription.auto_renew ? '✓ Да' : '✗ Нет'}</span>
+                        <span className="dashboard-info-value">{subscription.auto_renew ? t('dashboard.yes') : t('dashboard.no')}</span>
                       </div>
                     </div>
                   </div>
@@ -309,34 +331,117 @@ export default function Dashboard() {
                 <h2 className="dashboard-section__title">{t('dashboard.connections')}</h2>
               </div>
 
-              {loadingConn ? (
-                <div className="dashboard-spinner" />
-              ) : connections.length > 0 ? (
-                <div className="dashboard-table-wrap">
-                  <table className="dashboard-table">
-                    <thead>
-                      <tr>
-                        <th>{t('dashboard.conn_server')}</th>
-                        <th>{t('dashboard.conn_start')}</th>
-                        <th>{t('dashboard.conn_end')}</th>
-                        <th>{t('dashboard.conn_traffic')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {connections.map(c => (
-                        <tr key={c.id}>
-                          <td>{c.servers ? `${c.servers.country}, ${c.servers.city}` : '—'}</td>
-                          <td>{formatDate(c.start_time)}</td>
-                          <td>{formatDate(c.end_time)}</td>
-                          <td>{formatBytes(c.traffic_sent + c.traffic_recv)}</td>
+              {/* Traffic stats */}
+              {(() => {
+                const totalSent = connections.reduce((s, c) => s + (c.traffic_sent || 0), 0)
+                const totalRecv = connections.reduce((s, c) => s + (c.traffic_recv || 0), 0)
+                return (
+                  <div className="conn-stats">
+                    <div className="conn-stat-card">
+                      <div className="conn-stat-card__icon conn-stat-card__icon--recv">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="conn-stat-card__label">{t('dashboard.conn_recv')}</div>
+                        <div className="conn-stat-card__value">{formatBytes(totalRecv)}</div>
+                      </div>
+                    </div>
+                    <div className="conn-stat-card">
+                      <div className="conn-stat-card__icon conn-stat-card__icon--sent">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="conn-stat-card__label">{t('dashboard.conn_sent')}</div>
+                        <div className="conn-stat-card__value">{formatBytes(totalSent)}</div>
+                      </div>
+                    </div>
+                    <div className="conn-stat-card">
+                      <div className="conn-stat-card__icon conn-stat-card__icon--total">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="conn-stat-card__label">{t('dashboard.conn_total')}</div>
+                        <div className="conn-stat-card__value">{formatBytes(totalSent + totalRecv)}</div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* Servers */}
+              <div className="conn-block">
+                <h3 className="conn-block__title">{t('dashboard.conn_servers')}</h3>
+                {loadingServers ? (
+                  <div className="dashboard-spinner" />
+                ) : servers.length > 0 ? (
+                  <div className="conn-servers-grid">
+                    {servers.map(s => (
+                      <div key={s.id} className={`conn-server-card ${!s.is_active ? 'conn-server-card--inactive' : ''}`}>
+                        <div className="conn-server-card__header">
+                          <div>
+                            <div className="conn-server-card__country">{tGeo(s.country)}</div>
+                            <div className="conn-server-card__city">{tGeo(s.city)}</div>
+                          </div>
+                          <span className={`conn-server-card__status ${s.is_active ? 'conn-server-card__status--online' : 'conn-server-card__status--offline'}`}>
+                            {s.is_active ? t('dashboard.conn_online') : t('dashboard.conn_offline')}
+                          </span>
+                        </div>
+                        <div className="conn-server-card__load-row">
+                          <span className="conn-server-card__load-label">{t('dashboard.conn_load')}</span>
+                          <span className="conn-server-card__load-pct">{s.load}%</span>
+                        </div>
+                        <div className="conn-server-card__load-bar">
+                          <div
+                            className={`conn-server-card__load-fill ${s.load > 80 ? 'conn-server-card__load-fill--warn' : s.load > 50 ? 'conn-server-card__load-fill--mid' : ''}`}
+                            style={{ width: `${s.load}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="dashboard-empty">{t('dashboard.conn_no_servers')}</div>
+                )}
+              </div>
+
+              {/* History */}
+              <div className="conn-block">
+                <h3 className="conn-block__title">{t('dashboard.conn_history')}</h3>
+                {loadingConn ? (
+                  <div className="dashboard-spinner" />
+                ) : connections.length > 0 ? (
+                  <div className="dashboard-table-wrap">
+                    <table className="dashboard-table">
+                      <thead>
+                        <tr>
+                          <th>{t('dashboard.conn_server')}</th>
+                          <th>{t('dashboard.conn_start')}</th>
+                          <th>{t('dashboard.conn_end')}</th>
+                          <th>{t('dashboard.conn_traffic')}</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="dashboard-empty">{t('dashboard.no_connections')}</div>
-              )}
+                      </thead>
+                      <tbody>
+                        {connections.map(c => (
+                          <tr key={c.id}>
+                            <td>{c.servers ? `${tGeo(c.servers.country)}, ${tGeo(c.servers.city)}` : '—'}</td>
+                            <td>{formatDate(c.start_time)}</td>
+                            <td>{formatDate(c.end_time)}</td>
+                            <td>{formatBytes((c.traffic_sent || 0) + (c.traffic_recv || 0))}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="dashboard-empty">{t('dashboard.no_connections')}</div>
+                )}
+              </div>
             </div>
           )}
         </main>

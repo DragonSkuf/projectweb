@@ -36,7 +36,7 @@ export default function Hero() {
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </button>
-            <button className="hero__btn-ghost" onClick={scrollToTariffs}>
+            <button className="hero__btn-ghost" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
               {t('hero.cta_secondary')}
             </button>
           </div>

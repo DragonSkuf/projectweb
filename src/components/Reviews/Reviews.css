@@ -1,0 +1,121 @@
+.reviews {
+  padding: 10rem 0;
+  background: var(--color-bg-secondary);
+}
+
+.reviews__head {
+  text-align: center;
+  max-width: 60rem;
+  margin: 0 auto 6rem;
+}
+
+.reviews__title {
+  font-size: 3.6rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 1.6rem;
+  letter-spacing: -0.05rem;
+}
+
+.reviews__subtitle {
+  font-size: 1.6rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.4rem;
+}
+
+.reviews__card {
+  background: var(--color-bg-card);
+  border: 0.1rem solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 3.2rem 2.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.reviews__card:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-0.4rem);
+}
+
+.reviews__stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.reviews__star {
+  color: var(--color-warning);
+  font-size: 1.6rem;
+}
+
+.reviews__text {
+  color: var(--color-text-secondary);
+  font-size: 1.4rem;
+  line-height: 1.7;
+  flex: 1;
+}
+
+.reviews__author {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.reviews__avatar {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: var(--color-accent-dim);
+  border: 0.1rem solid var(--color-border);
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reviews__name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.reviews__role {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 96rem) {
+  .reviews__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 64rem) {
+  .reviews {
+    padding: 7rem 0;
+  }
+
+  .reviews__title {
+    font-size: 2.8rem;
+  }
+
+  .reviews__grid {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  .reviews__card {
+    padding: 2.4rem;
+  }
+}

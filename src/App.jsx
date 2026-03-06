@@ -5,6 +5,8 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Admin from './pages/Admin.jsx'
+import Privacy from './pages/Privacy.jsx'
+import Terms from './pages/Terms.jsx'
 import './App.css'
 
 function PrivateRoute({ children }) {
@@ -29,6 +31,8 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
